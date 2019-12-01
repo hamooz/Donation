@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JustGiving.Exercise.Calculator\JustGiving.Exercise.Calculator.csproj" />
     <ProjectReference Include="..\JustGiving.Exercise.ConfigurationHelper\JustGiving.Exercise.ConfigurationHelper.csproj" />
+    <ProjectReference Include="..\JustGiving.Exercise.Models\JustGiving.Exercise.Models.csproj" />
   </ItemGroup>
 
 </Project>
