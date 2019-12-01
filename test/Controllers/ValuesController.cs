@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JustGiving.Exercise.API.Controllers
+namespace test.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
