@@ -14,35 +14,41 @@ namespace JustGiving.Exercise.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GiftAidController : ControllerBase
+    public class DonationController : ControllerBase
     {
         private IValidation _validation;
         private ICalculator _calculator;
-        public GiftAidController(ICalculator calculator, IValidation validation) 
+        private IDonationService _donationService;
+        public DonationController(ICalculator calculator, IValidation validation, IDonationService donationService)
         {
             _calculator = calculator ?? throw new ArgumentNullException(nameof(calculator));
             _validation = validation ?? throw new ArgumentNullException(nameof(validation));
+            _donationService = donationService ?? throw new ArgumentNullException(nameof(donationService));
         }
-        /// <summary>
-        /// Deletes a specific TodoItem.
-        /// </summary>
-        [Produces("application/json")]  
-        [HttpGet]
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Get(decimal amount)
+        public IActionResult AddDonation(AddDonationRequest donation)
         {
-            var validationResult = _validation.Validate(amount);
+            var validationResult = _validation.Validate(donation.Amount);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.ErrorList);
             }
-            return Ok(new GiftAidResponse()
+            var id = _donationService.AddDonation(new Data.Donation()
             {
-                DonationAmount = amount,
-                GiftAidAmount = _calculator.CalculateGiftAid(amount)
+                Amount = donation.Amount,
+                Fullname = donation.Fullname,
+                Postcode = donation.Postcode
+            });
+            return Ok(new AddDonationResponse()
+            {
+                Id = id,
+                GiftAidAmount = _calculator.CalculateGiftAid(donation.Amount)
             });
         }
-        
     }
 }

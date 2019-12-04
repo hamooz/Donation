@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JustGiving.Exercise.CalculatorService;
 using JustGiving.Exercise.ConfigurationHelper;
+using JustGiving.Exercise.Data;
 using JustGiving.Exercise.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.EntityFrameworkCore;
+using JustGiving.Exercise.Business;
 
 namespace JustGiving.Exercise.API
 {
@@ -39,6 +42,11 @@ namespace JustGiving.Exercise.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<ICalculator, Calculator>();
             services.AddSingleton<IValidation, Validation>();
+            services.AddScoped<IDonationService, DonationService>();
+            services.AddScoped<IRepository, Repository>();
+            services.AddDbContext<DonationDbContext>(options =>
+            options.UseInMemoryDatabase(databaseName:"DonationDB"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +68,8 @@ namespace JustGiving.Exercise.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "JustGiving Exercise API");
-                c.RoutePrefix = string.Empty;
+                c.RoutePrefix = "swagger";
+
             });
 
         }
